@@ -1,9 +1,18 @@
 <template>
     <div class="my-main">
+        <el-row>
+            <el-col :span="8">
+            <el-input v-model="inputUser" placeholder="请输入账号或用户名进行查询" :span="1"></el-input>
+            </el-col>
+            <el-col :span="2">
+            <el-button @click="searchUser">查询</el-button>
+            </el-col>
+        </el-row>
         <el-table class="table"
     :data="tableData"  height="300"
     stripe
     style="width: 100%">
+    <input type="checkbox"/>
     <el-table-column
       type="selection"
       width="55">
@@ -47,13 +56,23 @@ export default {
     name:'my-main',
     data(){
         return {
-             tableData: []
+             tableData: [],
+             inputUser:''
+        }
+    },
+    methods:{
+        searchUser:function(){
+            var that = this;
+            var filterdate = this.tableData.filter(function(value){
+                return value.date == that.inputUser   ||    value.name == that.inputUser
+            })
+            this.tableData = filterdate
         }
     },
     created(){
         var that = this;
-    this.$axios.get('http://api.haomo-studio.com/org/hm_users')
-      .then(function (response) {
+        this.$axios.get('http://api.haomo-studio.com/org/hm_users')
+        .then(function (response) {
         console.log(response.data)
         var userInfo = response.data
         for(var i=0;i<userInfo.length;i++){
